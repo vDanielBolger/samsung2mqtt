@@ -1,0 +1,23 @@
+#
+# Samsung2Mqtt Dockerfile
+#
+# Build with:
+#  docker build --rm --tag=samsung2mqtt:latest .
+#
+# Put your cnofig in config.js and run with:
+#  docker run -d -v $PWD/config.js:/app/config.js --name=samsung2mqtt samsung2mqtt
+#
+
+FROM arm64v8/node:12-alpine
+
+WORKDIR /usr/src/app
+
+COPY package.json package-lock.json /usr/src/app/
+
+RUN npm install --loglevel verbose && \
+    npm cache clean --force && \
+    rm -rf /tmp/* /root/.npm
+
+COPY . /usr/src/app/
+
+ENTRYPOINT ["node", "./index.js"]
